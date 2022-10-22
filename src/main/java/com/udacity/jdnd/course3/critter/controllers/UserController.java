@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.udacity.jdnd.course3.critter.entities.Customer;
+import com.udacity.jdnd.course3.critter.entities.Employee;
 import com.udacity.jdnd.course3.critter.services.UserService;
 import com.udacity.jdnd.course3.critter.user.CustomerDTO;
 import com.udacity.jdnd.course3.critter.user.EmployeeDTO;
@@ -48,7 +50,6 @@ public class UserController {
     public List<CustomerDTO> getAllCustomers() {
         return userService.getAllCustomers().stream().map(customer -> convertCustomerToCustomerDTO(customer))
                 .collect(Collectors.toList());
-        // throw new UnsupportedOperationException();
     }
 
     @GetMapping("/customer/pet/{petId}")
@@ -58,12 +59,13 @@ public class UserController {
 
     @PostMapping("/employee")
     public EmployeeDTO saveEmployee(@RequestBody EmployeeDTO employeeDTO) {
-        throw new UnsupportedOperationException();
+        return convertEmployeeToEmployeeDTO(userService.saveEmployee(employeeDTO));
     }
 
     @PostMapping("/employee/{employeeId}")
-    public EmployeeDTO getEmployee(@PathVariable long employeeId) {
-        throw new UnsupportedOperationException();
+    public EmployeeDTO getEmployee(@PathVariable long employeeId) throws Exception {
+        return convertEmployeeToEmployeeDTO(
+                userService.getEmployeeById(employeeId).orElseThrow(() -> new Exception("" + HttpStatus.NOT_FOUND)));
     }
 
     @PutMapping("/employee/{employeeId}")
@@ -76,15 +78,15 @@ public class UserController {
         throw new UnsupportedOperationException();
     }
 
-    private Customer convertCustomerDTOToCustomer(CustomerDTO customerDTO) {
-        Customer customer = new Customer();
-        BeanUtils.copyProperties(customerDTO, customer);
-        return customer;
-    }
-
     private CustomerDTO convertCustomerToCustomerDTO(Customer customer) {
         CustomerDTO customerDTO = new CustomerDTO();
         BeanUtils.copyProperties(customer, customerDTO);
         return customerDTO;
+    }
+
+    private EmployeeDTO convertEmployeeToEmployeeDTO(Employee employee) {
+        EmployeeDTO employeeDTO = new EmployeeDTO();
+        BeanUtils.copyProperties(employee, employeeDTO);
+        return employeeDTO;
     }
 }
