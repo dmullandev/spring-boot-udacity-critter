@@ -1,9 +1,12 @@
 package com.udacity.jdnd.course3.critter.entities;
 
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 import lombok.Data;
 
@@ -18,7 +21,7 @@ public class Customer {
     private String phoneNumber;
     private String notes;
 
-    // @OneToMany // one customer can belong to many pets
-    // private List<Long> petIds;
+    @OneToMany // one customer can belong to many pets
+    private List<Long> petIds;
 
 }

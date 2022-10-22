@@ -12,7 +12,7 @@ import lombok.Data;
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @Data
-public abstract class Pet {
+public class Pet {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -26,5 +26,8 @@ public abstract class Pet {
         this.name = name;
         this.colour = colour;
         this.favouriteFood = favouriteFood;
+    }
+
+    public Pet() {
     }
 }

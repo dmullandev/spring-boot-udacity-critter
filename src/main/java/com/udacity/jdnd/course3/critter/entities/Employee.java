@@ -1,12 +1,17 @@
 package com.udacity.jdnd.course3.critter.entities;
 
-import java.util.List;
+import java.util.Set;
 
+import javax.persistence.CollectionTable;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.JoinColumn;
 
 import com.udacity.jdnd.course3.critter.user.EmployeeSkill;
 
@@ -21,8 +26,11 @@ public class Employee {
 
     private String name;
 
-    @OneToMany // many skills can belong to one employee
-    // @JoinColumn(name = "delivery_id") // map the join column in the plant table
-    private List<EmployeeSkill> skills;
+    // @OneToMany // many skills can belong to one employee
+    @ElementCollection(targetClass = EmployeeSkill.class)
+    @Enumerated(EnumType.STRING)
+    @CollectionTable(name = "USER_SKILL", joinColumns = @JoinColumn(name = "employee_id"))
+    @Column(name = "SKILLS")
+    private Set<EmployeeSkill> skills;
 
 }
