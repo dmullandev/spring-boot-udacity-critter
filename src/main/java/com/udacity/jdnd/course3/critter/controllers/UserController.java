@@ -1,6 +1,7 @@
 package com.udacity.jdnd.course3.critter.controllers;
 
 import java.time.DayOfWeek;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -15,12 +16,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.udacity.jdnd.course3.critter.dto.CustomerDTO;
+import com.udacity.jdnd.course3.critter.dto.EmployeeDTO;
+import com.udacity.jdnd.course3.critter.dto.EmployeeRequestDTO;
 import com.udacity.jdnd.course3.critter.entities.Customer;
 import com.udacity.jdnd.course3.critter.entities.Employee;
 import com.udacity.jdnd.course3.critter.services.UserService;
-import com.udacity.jdnd.course3.critter.user.CustomerDTO;
-import com.udacity.jdnd.course3.critter.user.EmployeeDTO;
-import com.udacity.jdnd.course3.critter.user.EmployeeRequestDTO;
 
 /**
  * Handles web requests related to Users.
@@ -41,18 +42,23 @@ public class UserController {
 
     @PostMapping("/customer")
     public CustomerDTO saveCustomer(@RequestBody CustomerDTO customerDTO) {
-        return convertCustomerToCustomerDTO(userService.saveCustomer(customerDTO));
+        return convertCustomerToCustomerDTO(userService
+                                                       .saveCustomer(customerDTO));
     }
 
     @GetMapping("/customer")
     public List<CustomerDTO> getAllCustomers() {
-        return userService.getAllCustomers().stream().map(customer -> convertCustomerToCustomerDTO(customer))
-                .collect(Collectors.toList());
+        return userService
+                          .getAllCustomers()
+                          .stream()
+                          .map(customer -> convertCustomerToCustomerDTO(customer))
+                          .collect(Collectors
+                                             .toList());
     }
 
     @GetMapping("/customer/pet/{petId}")
     public CustomerDTO getOwnerByPet(@PathVariable long petId) {
-        throw new UnsupportedOperationException();
+        return convertCustomerToCustomerDTO(userService.getOwnerByPetId(petId).get());
     }
 
     @PostMapping("/employee")
@@ -63,22 +69,36 @@ public class UserController {
     @PostMapping("/employee/{employeeId}")
     public EmployeeDTO getEmployee(@PathVariable long employeeId) throws Exception {
         return convertEmployeeToEmployeeDTO(
-                userService.getEmployeeById(employeeId).orElseThrow(() -> new Exception("" + HttpStatus.NOT_FOUND)));
+                userService
+                           .getEmployeeById(employeeId)
+                           .orElseThrow(() -> new Exception("" + HttpStatus.NOT_FOUND)));
     }
 
     @PutMapping("/employee/{employeeId}")
     public void setAvailability(@RequestBody Set<DayOfWeek> daysAvailable, @PathVariable long employeeId) {
-        throw new UnsupportedOperationException();
+        userService.setEmployeeAvailability(daysAvailable, employeeId);
     }
 
     @GetMapping("/employee/availability")
     public List<EmployeeDTO> findEmployeesForService(@RequestBody EmployeeRequestDTO employeeDTO) {
-        throw new UnsupportedOperationException();
+        return userService.findEmployeesForService(employeeDTO)
+                          .stream()
+                          .map(employee -> convertEmployeeToEmployeeDTO(employee))
+                          .collect(Collectors.toList());
     }
 
     private CustomerDTO convertCustomerToCustomerDTO(Customer customer) {
         CustomerDTO customerDTO = new CustomerDTO();
-        BeanUtils.copyProperties(customer, customerDTO);
+        BeanUtils
+                 .copyProperties(customer, customerDTO);
+
+        List<Long> petIds = new ArrayList<>();
+
+        if (customer.getPets() != null) {
+            customer.getPets().forEach(pet -> petIds.add(pet.getId()));
+        }
+        customerDTO.setPetIds(petIds);
+
         return customerDTO;
     }
 

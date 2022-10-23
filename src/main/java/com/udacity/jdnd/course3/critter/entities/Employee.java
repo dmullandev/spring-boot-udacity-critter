@@ -1,19 +1,18 @@
 package com.udacity.jdnd.course3.critter.entities;
 
+import java.time.DayOfWeek;
+import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CollectionTable;
-import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 
-import com.udacity.jdnd.course3.critter.user.EmployeeSkill;
+import org.hibernate.annotations.Nationalized;
+
+import com.udacity.jdnd.course3.critter.constants.EmployeeSkill;
 
 import lombok.Data;
 
@@ -24,13 +23,28 @@ public class Employee {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
+    @Nationalized
     private String name;
-
-    // @OneToMany // many skills can belong to one employee
     @ElementCollection(targetClass = EmployeeSkill.class)
-    @Enumerated(EnumType.STRING)
-    @CollectionTable(name = "USER_SKILL", joinColumns = @JoinColumn(name = "employee_id"))
-    @Column(name = "SKILLS")
-    private Set<EmployeeSkill> skills;
+    private Set<EmployeeSkill> skills = new HashSet<>();
+
+    @ElementCollection(targetClass = DayOfWeek.class)
+    private Set<DayOfWeek> daysAvailable = new HashSet<>();
+
+    public Set<EmployeeSkill> getSkills() {
+        return skills;
+    }
+
+    public void setSkills(Set<EmployeeSkill> skills) {
+        this.skills = skills;
+    }
+
+    public Set<DayOfWeek> getDaysAvailable() {
+        return daysAvailable;
+    }
+
+    public void setDaysAvailable(Set<DayOfWeek> daysAvailable) {
+        this.daysAvailable = daysAvailable;
+    }
 
 }

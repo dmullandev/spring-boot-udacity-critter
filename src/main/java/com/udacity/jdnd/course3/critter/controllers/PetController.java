@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.udacity.jdnd.course3.critter.dto.PetDTO;
 import com.udacity.jdnd.course3.critter.entities.Pet;
-import com.udacity.jdnd.course3.critter.pet.PetDTO;
 import com.udacity.jdnd.course3.critter.services.PetService;
 
 /**
@@ -36,13 +35,7 @@ public class PetController {
 
     @GetMapping("/{petId}")
     public PetDTO getPet(@PathVariable long petId) {
-        try {
-            return convertPetToPetDTO(
-                    petService.getPetById(petId).orElseThrow(() -> new Exception("" + HttpStatus.NOT_FOUND)));
-        } catch (Exception e) {
-
-        }
-        return null;
+        return convertPetToPetDTO(petService.getPetById(petId).get());
     }
 
     @GetMapping
@@ -60,6 +53,7 @@ public class PetController {
         PetDTO petDTO = new PetDTO();
 
         BeanUtils.copyProperties(pet, petDTO);
+        petDTO.setOwnerId(pet.getOwner().getId());
 
         return petDTO;
     }

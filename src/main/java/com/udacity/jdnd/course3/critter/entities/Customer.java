@@ -1,5 +1,6 @@
 package com.udacity.jdnd.course3.critter.entities;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -8,20 +9,36 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import org.hibernate.annotations.Nationalized;
+
 import lombok.Data;
 
 @Entity
 @Data
 public class Customer {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
+    @Nationalized
     private String name;
     private String phoneNumber;
     private String notes;
 
-    @OneToMany // one customer can belong to many pets
-    private List<Long> petIds;
+    @OneToMany(mappedBy = "owner")
+    private List<Pet> pets = new LinkedList<>();
 
+    public Customer(Long id, String name, String phoneNumber, String notes) {
+        this.id = id;
+        this.name = name;
+        this.phoneNumber = phoneNumber;
+        this.notes = notes;
+    }
+
+    public Customer() {
+    }
+
+    public void addPet(Pet pet) {
+        pets.add(pet);
+    }
 }
