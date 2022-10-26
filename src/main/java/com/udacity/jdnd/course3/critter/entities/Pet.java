@@ -30,15 +30,4 @@ public class Pet {
 
     @ManyToOne
     private Customer owner;
-
-    public Pet(Long id, PetType type, String name, LocalDate birthDate, String notes) {
-        this.id = id;
-        this.type = type;
-        this.name = name;
-        this.birthDate = birthDate;
-        this.notes = notes;
-    }
-
-    public Pet() {
-    }
 }

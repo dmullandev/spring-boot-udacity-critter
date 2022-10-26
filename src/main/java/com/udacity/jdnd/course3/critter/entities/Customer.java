@@ -28,16 +28,6 @@ public class Customer {
     @OneToMany(mappedBy = "owner")
     private List<Pet> pets = new LinkedList<>();
 
-    public Customer(Long id, String name, String phoneNumber, String notes) {
-        this.id = id;
-        this.name = name;
-        this.phoneNumber = phoneNumber;
-        this.notes = notes;
-    }
-
-    public Customer() {
-    }
-
     public void addPet(Pet pet) {
         pets.add(pet);
     }
