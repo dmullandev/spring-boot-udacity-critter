@@ -3,6 +3,8 @@ package com.udacity.jdnd.course3.critter.services;
 import java.util.List;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +15,7 @@ import com.udacity.jdnd.course3.critter.repository.CustomerRepository;
 import com.udacity.jdnd.course3.critter.repository.PetRepository;
 
 @Service
+@Transactional
 public class PetService {
 
     private final PetRepository petRepository;
@@ -28,7 +31,7 @@ public class PetService {
     public Pet savePet(PetDTO petDTO) {
         Customer owner = userService.getCustomerById(petDTO.getOwnerId());
 
-        Pet newPet = convertDTOToPet(petDTO);
+        Pet newPet = convertPetDTOToPet(petDTO);
 
         newPet.setOwner(owner);
 
@@ -54,7 +57,7 @@ public class PetService {
         return petRepository.findAllByOwnerId(ownerId);
     }
 
-    public Pet convertDTOToPet(PetDTO petDTO) {
+    public Pet convertPetDTOToPet(PetDTO petDTO) {
         Pet pet = new Pet();
         BeanUtils.copyProperties(petDTO, pet);
 

@@ -1,5 +1,6 @@
 package com.udacity.jdnd.course3.critter.controllers;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -13,7 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.udacity.jdnd.course3.critter.dto.ScheduleDTO;
 import com.udacity.jdnd.course3.critter.entities.Schedule;
+import com.udacity.jdnd.course3.critter.services.PetService;
 import com.udacity.jdnd.course3.critter.services.ScheduleService;
+import com.udacity.jdnd.course3.critter.services.UserService;
 
 /**
  * Handles web requests related to Schedules.
@@ -23,9 +26,13 @@ import com.udacity.jdnd.course3.critter.services.ScheduleService;
 public class ScheduleController {
 
     private final ScheduleService scheduleService;
+    private final UserService userService;
+    private final PetService petService;
 
-    public ScheduleController(ScheduleService scheduleService) {
+    public ScheduleController(ScheduleService scheduleService, UserService userService, PetService petService) {
         this.scheduleService = scheduleService;
+        this.userService = userService;
+        this.petService = petService;
     }
 
     @PostMapping
@@ -67,8 +74,21 @@ public class ScheduleController {
 
     private ScheduleDTO convertScheduleToScheduleDTO(Schedule schedule) {
         ScheduleDTO scheduleDTO = new ScheduleDTO();
-
         BeanUtils.copyProperties(schedule, scheduleDTO);
+
+        List<Long> employeeIds = new ArrayList<>();
+        List<Long> petIds = new ArrayList<>();
+
+        if (schedule.getEmployees() != null) {
+            schedule.getEmployees().forEach(employee -> employeeIds.add(employee.getId()));
+        }
+
+        if (schedule.getPets() != null) {
+            schedule.getPets().forEach(pet -> petIds.add(pet.getId()));
+        }
+
+        scheduleDTO.setEmployeeIds(employeeIds);
+        scheduleDTO.setPetIds(petIds);
 
         return scheduleDTO;
     }

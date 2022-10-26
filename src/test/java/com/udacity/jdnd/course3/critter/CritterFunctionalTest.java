@@ -163,7 +163,7 @@ public class CritterFunctionalTest {
         er1.setSkills(Sets.newHashSet(EmployeeSkill.PETTING));
 
         Set<Long> eIds1 = userController.findEmployeesForService(er1).stream().map(EmployeeDTO::getId)
-                .collect(Collectors.toSet());
+                                        .collect(Collectors.toSet());
         Set<Long> eIds1expected = Sets.newHashSet(emp1n.getId(), emp2n.getId());
         Assertions.assertEquals(eIds1, eIds1expected);
 
@@ -173,7 +173,7 @@ public class CritterFunctionalTest {
         er2.setSkills(Sets.newHashSet(EmployeeSkill.WALKING, EmployeeSkill.SHAVING));
 
         Set<Long> eIds2 = userController.findEmployeesForService(er2).stream().map(EmployeeDTO::getId)
-                .collect(Collectors.toSet());
+                                        .collect(Collectors.toSet());
         Set<Long> eIds2expected = Sets.newHashSet(emp3n.getId());
         Assertions.assertEquals(eIds2, eIds2expected);
     }
@@ -244,12 +244,12 @@ public class CritterFunctionalTest {
 
         // Owner of the first pet will only be in schedule 1
         List<ScheduleDTO> scheds1c = scheduleController
-                .getScheduleForCustomer(userController.getOwnerByPet(sched1.getPetIds().get(0)).getId());
+                                                       .getScheduleForCustomer(userController.getOwnerByPet(sched1.getPetIds().get(0)).getId());
         compareSchedules(sched1, scheds1c.get(0));
 
         // Owner of pet from schedule 2 will be in both schedules 2 and 3
         List<ScheduleDTO> scheds2c = scheduleController
-                .getScheduleForCustomer(userController.getOwnerByPet(sched2.getPetIds().get(0)).getId());
+                                                       .getScheduleForCustomer(userController.getOwnerByPet(sched2.getPetIds().get(0)).getId());
         compareSchedules(sched2, scheds2c.get(0));
         compareSchedules(sched3, scheds2c.get(1));
     }

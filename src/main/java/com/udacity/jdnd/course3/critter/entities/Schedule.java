@@ -1,6 +1,8 @@
 package com.udacity.jdnd.course3.critter.entities;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -9,6 +11,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 
 import com.udacity.jdnd.course3.critter.constants.EmployeeSkill;
 
@@ -22,14 +27,16 @@ public class Schedule {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ElementCollection
-    private List<Long> employeeIds;
+    @ManyToMany
+    @JoinTable(name = "schedule_employee", joinColumns = @JoinColumn(name = "schedule_id"), inverseJoinColumns = @JoinColumn(name = "employee_id"))
+    private List<Employee> employees = new ArrayList<>();
 
-    @ElementCollection
-    private List<Long> petIds;
+    @ManyToMany
+    @JoinTable(name = "schedule_pet", joinColumns = @JoinColumn(name = "schedule_id"), inverseJoinColumns = @JoinColumn(name = "pet_id"))
+    private List<Pet> pets = new ArrayList<>();
 
     private LocalDate date;
 
-    @ElementCollection
-    private Set<EmployeeSkill> activities;
+    @ElementCollection(targetClass = EmployeeSkill.class)
+    private Set<EmployeeSkill> activities = new HashSet<>();
 }

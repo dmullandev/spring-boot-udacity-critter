@@ -6,6 +6,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,6 +23,7 @@ import com.udacity.jdnd.course3.critter.repository.EmployeeRepository;
 import com.udacity.jdnd.course3.critter.repository.PetRepository;
 
 @Service
+@Transactional
 public class UserService {
 
     private final CustomerRepository customerRepository;
@@ -61,10 +64,10 @@ public class UserService {
         return employeeRepository.findById(employeeId);
     }
 
-    public Optional<Customer> getOwnerByPetId(Long petId) {
+    public Customer getOwnerByPetId(Long petId) {
         Pet pet = petRepository.getOne(petId);
 
-        return customerRepository.findById(pet.getId());
+        return customerRepository.findCustomerByPets(pet);
     }
 
     public void setEmployeeAvailability(Set<DayOfWeek> daysAvailable, @PathVariable long employeeId) {

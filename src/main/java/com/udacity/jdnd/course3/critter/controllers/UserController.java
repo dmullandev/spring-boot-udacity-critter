@@ -58,7 +58,7 @@ public class UserController {
 
     @GetMapping("/customer/pet/{petId}")
     public CustomerDTO getOwnerByPet(@PathVariable long petId) {
-        return convertCustomerToCustomerDTO(userService.getOwnerByPetId(petId).get());
+        return convertCustomerToCustomerDTO(userService.getOwnerByPetId(petId));
     }
 
     @PostMapping("/employee")

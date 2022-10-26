@@ -5,11 +5,13 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import com.udacity.jdnd.course3.critter.entities.Employee;
+import com.udacity.jdnd.course3.critter.entities.Pet;
 import com.udacity.jdnd.course3.critter.entities.Schedule;
 
 @Repository
 public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
-    List<Schedule> findAllByPetIds(Long petId);
+    List<Schedule> findScheduleByPets(Pet pet);
 
-    List<Schedule> findAllByEmployeeIds(Long employeeId);
+    List<Schedule> findScheduleByEmployees(Employee employee);
 }
